@@ -33,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
 
     DecimalFormat myformatter = new DecimalFormat("######.######");
 
+    String history,currentResult;
+
+    boolean dot = true;
+
+    boolean btnACcontrol = true;
+
+    boolean  btnEqualsControl = false;
+
 
 
     @Override
@@ -170,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
                 textViewHistory.setText("");
                 firstNumber = 0;
                 lastNumber = 0;
+                dot = true;
+                btnACcontrol = true;
 
             }
         });
@@ -178,8 +188,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                number = number.substring(0,number.length()-1);
-                textViewResult.setText(number);
+                if(btnACcontrol == true)
+                {
+                   textViewResult.setText("0");
+                }
+                else
+                {
+
+                    number = number.substring(0,number.length()-1);
+
+
+                    if(number.length() == 0)
+                    {
+                        btnDel.setClickable(false);
+                    }
+                    else if (number.contains("."))
+                    {
+                       dot = false;
+                    }
+                    else
+                    {
+                        dot = true;
+                    }
+                    textViewResult.setText(number);
+                }
+
+
 
             }
         });
@@ -187,6 +221,10 @@ public class MainActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                history = textViewHistory.getText().toString();
+                currentResult = textViewResult.getText().toString();
+                textViewHistory.setText(history+currentResult +"+");
 
                 if (operator == true)
                 {
@@ -216,8 +254,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         btnMinus.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
+
+                history = textViewHistory.getText().toString();
+                currentResult = textViewResult.getText().toString();
+                textViewHistory.setText(history+currentResult +"-");
 
                 if (operator == true)
                 {
@@ -251,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
         btnMulti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                history = textViewHistory.getText().toString();
+                currentResult = textViewResult.getText().toString();
+                textViewHistory.setText(history+currentResult +"*");
+
                 if (operator == true)
                 {
                     if(status == "sum")
@@ -282,6 +331,10 @@ public class MainActivity extends AppCompatActivity {
         btnDivide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                history = textViewHistory.getText().toString();
+                currentResult = textViewResult.getText().toString();
+                textViewHistory.setText(history+currentResult +"/");
 
                 if (operator == true)
                 {
@@ -342,6 +395,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 operator = false;
+                btnEqualsControl = true;
 
             }
         });
@@ -350,15 +404,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (number == null)
+                if (dot)
                 {
-                    number = "0."
-                }
-                else
-                {
+                    if (number == null)
+                    {
+                        number = "0.";
+                    }
+                    else
+                    {
+                        number = number + ".";
+
+                    }
 
                 }
 
+
+
+                textViewResult.setText(number);
+                dot = false;
             }
         });
 
@@ -373,6 +436,13 @@ public class MainActivity extends AppCompatActivity {
           {
               number = view;
           }
+          else if (btnEqualsControl)
+          {
+              firstNumber = 0;
+              lastNumber = 0;
+              number = view;
+
+          }
           else
           {
             number = number + view;
@@ -380,6 +450,9 @@ public class MainActivity extends AppCompatActivity {
 
           textViewResult.setText(number);
           operator = true;
+          btnACcontrol = false;
+          btnDel.setClickable(true);
+          btnEqualsControl = false;
         }
 
     }
@@ -389,6 +462,8 @@ public class MainActivity extends AppCompatActivity {
         firstNumber = firstNumber + lastNumber;
 
         textViewResult.setText(myformatter.format(firstNumber));
+
+        dot = true;
     }
 
     public void minus()
@@ -405,6 +480,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         textViewResult.setText(myformatter.format(firstNumber));
+        dot = true;
     }
 
     public void multiply()
@@ -421,6 +497,7 @@ public class MainActivity extends AppCompatActivity {
             firstNumber = firstNumber * lastNumber;
         }
         textViewResult.setText(myformatter.format(firstNumber));
+        dot = true;
     }
     public void divide()
     {
@@ -436,6 +513,7 @@ public class MainActivity extends AppCompatActivity {
             firstNumber = firstNumber / lastNumber;
         }
         textViewResult.setText(myformatter.format(firstNumber));
+        dot = true;
     }
 
 }
